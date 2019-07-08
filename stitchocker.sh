@@ -77,11 +77,15 @@ function scr
 			fi
 
 			# General variables
-			local config="docker-compose.yml"
+			local config="docker-compose.yaml"
 			local config_path="$path/$config"
 
 			if [[ ! -e $config_path ]]; then
-				scr_error "No such file or directory: '$config_path'"
+				config="docker-compose.yml"
+				config_path="$path/$config"
+				if [[ ! -e $config_path ]]; then
+					scr_error "No such file or directory: '$config_path'"
+				fi
 			fi
 
 			local default_set=$(scr_env stitchocker_default_set)

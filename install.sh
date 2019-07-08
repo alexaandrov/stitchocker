@@ -8,7 +8,7 @@ function scr_install
 
     local destination_path="/tmp"
     local bin_path="/usr/local/bin"
-    local stitchoker_uri="https://raw.githubusercontent.com/alexaandrov/stitchocker/0.0.2/stitchocker.sh"
+    local stitchoker_uri="https://raw.githubusercontent.com/alexaandrov/stitchocker/master/stitchocker.sh"
     local stitchocker_name="stitchocker"
     local stitchocker_tmp_path="$destination_path/$stitchocker_name.sh"
     local stitchocker_bin_path="$bin_path/$stitchocker_name"
