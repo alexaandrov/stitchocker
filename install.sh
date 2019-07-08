@@ -19,7 +19,7 @@ function scr_install
 
     scr_info "Installing $stitchocker_name"
 
-    if [[ -e $stitchocker_bin_path ]]; then
+    if [[ -f $stitchocker_bin_path ]]; then
       scr_info "Removing previous version"
       rm -f $stitchocker_bin_path
     fi
