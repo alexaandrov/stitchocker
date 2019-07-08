@@ -119,13 +119,13 @@ export SERVICES="~/services"
 ~/services $ tree .
 ├── reverse-proxy
     └── ...
-    └── docker-compose.ymlI
+    └── docker-compose.yml
 ├── mysql
     └── ...
-    └── docker-compose.ymlI
+    └── docker-compose.yml
 ├── redis
     └── ...
-    └── docker-compose.ymlI
+    └── docker-compose.yml
 ```
 
 ```
@@ -137,13 +137,13 @@ export SERVICES="~/services"
 ├── docker-compose.yml
 ├── platform
     └── ...
-    └── docker-compose.ymlI
+    └── docker-compose.yml
 ├── landing
     └── ...
-    └── docker-compose.ymlI
+    └── docker-compose.yml
 ├── storybook
     └── ...
-    └── docker-compose.ymlI
+    └── docker-compose.yml
 ```
 
 ```
