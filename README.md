@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/release/alexaandrov/stitchocker.svg?style=flat-square)](https://github.com/alexaandrov/stitchocker/releases/latest)
 ![GitHub file size in bytes](https://img.shields.io/github/size/alexaandrov/stitchocker/stitchocker.sh.svg)
 
-**Stitchoker** its command line utility for stitching your docker-compose services.
+**Stitchocker** its command line utility for stitching your docker-compose services.
 
 # Installation
 
