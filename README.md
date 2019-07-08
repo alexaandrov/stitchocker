@@ -5,6 +5,8 @@
 [![Release](https://img.shields.io/github/release/alexaandrov/stitchocker.svg?style=flat-square)](https://github.com/alexaandrov/stitchocker/releases/latest)
 ![GitHub file size in bytes](https://img.shields.io/github/size/alexaandrov/stitchocker/stitchocker.sh.svg)
 
+**Stitchoker** its command line utility for stitching your docker-compose services.
+
 # Installation
 
 The easiest way to install the latest binaries for Linux and Mac is to run this in a shell:
@@ -13,7 +15,7 @@ The easiest way to install the latest binaries for Linux and Mac is to run this 
 curl -sSf https://raw.githubusercontent.com/alexaandrov/stitchocker/master/install.sh | sudo bash
 ```
 
-## Manual installation
+### Manual installation
 
 If you dont like to curl | bash you can download release from here:
 
@@ -31,10 +33,25 @@ sudo chmod +x /usr/local/bin/stitchocker
 ```
 
 Option 2
+
 ```
 chmod +x /path-to-release/stitchocker.sh
 ```
+
 In your .bashrc
+
 ```
 alias stitchocker="/path-to-release/stitchocker.sh"
 ```
+
+# Usage
+
+Run in your shell
+
+```
+stitchocker -h
+```
+
+# Copyright and license
+
+Code released under the [Apache 2.0](https://raw.githubusercontent.com/alexaandrov/stitchocker/master/LICENSE) license. See LICENSE for the full license text.
