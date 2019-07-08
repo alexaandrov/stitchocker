@@ -63,18 +63,18 @@ function scr
 				scr_error "Command not specified"
 			fi
 
-			if [[ $first_flag == "--all" ]]; then
-				for service_name in $(cd $path && ls -d */) ; do
-					local path="$path/$service_name"
-					local cmd="$exec $path $command"
-					if [[ $command != "up" ]]; then
-						local cmd="$cmd $flags"
-					else
-						local cmd="$cmd -d"
-					fi
-					eval $cmd
-				done
-			fi
+			# if [[ $first_flag == "--all" ]]; then
+			# 	for service_name in $(cd $path && ls -d */) ; do
+			# 		local path="$path/$service_name"
+			# 		local cmd="$exec $path $command"
+			# 		if [[ $command != "up" ]]; then
+			# 			local cmd="$cmd $flags"
+			# 		else
+			# 			local cmd="$cmd -d"
+			# 		fi
+			# 		eval $cmd
+			# 	done
+			# fi
 
 			# General variables
 			local config="docker-compose.yaml"
