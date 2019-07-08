@@ -196,13 +196,11 @@ function scr_env
 
     local env_path="$(eval "echo \"\$$env\"")"
 
-    if [ ! -z "$env_additional_path" && "$env_alias" != "$env_additional_path" ]
-    then
+    if [[ ! -z "$env_additional_path" && "$env_alias" != "$env_additional_path" ]]; then
         env_path="$env_path/$env_additional_path"
     fi
 
-    if [[ $env_path == *"himBHs"* || -z $env_path ]];
-    then
+    if [[ $env_path == *"himBHs"* || -z $env_path ]]; then
         echo "null"
     fi
 
