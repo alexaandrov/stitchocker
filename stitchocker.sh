@@ -116,7 +116,7 @@ function scr
 				local services="$(eval echo \${${sets_field}_${set}[*]})"
 
 				if [[ -z $services ]]; then
-					scr_error "Builder config doesn't have \"$set\" value"
+					scr_error "Your config doesn't have \"$set\" value"
 				fi
 
 				echo

@@ -46,11 +46,167 @@ alias stitchocker="/path-to-release/stitchocker.sh"
 
 # Usage
 
-Run in your shell
+First create in your services parent directory `docker-compose.yml' file.
+
+This config file should be looks like:
 
 ```
-stitchocker -h
+sets:
+    # Default set running by default
+    default:
+        # You can refer to the services that are in the directory with the stithocker config (parent directory)
+
+        parent-service-name
+
+        # You can refer to the exported paths in your shell config (eg ~/.bashrc).
+        # In your shell config in this case should be:
+        # export SERVICES="/absolute-path-to-services-dir"
+
+        services/service-name-in-services-alias
+
+        # You can import your custom sets
+
+        @custom
+    custom:
+        another-parent-service-name
+        services/another-service-name-in-services-alias
 ```
+
+Then run in your shell:
+
+```
+stitchocker up
+```
+
+Also you can run stitchocker in debug mode:
+
+```
+export STITCHOCKER_DEBUG=true
+stitchocker up
+```
+
+Stitchocker help message
+```
+$ stitchocker -h
+
+Usage:
+        stitchocker [-a <arg>...] [alias] [docker-compose COMMAND] [SETS...]
+        stitchocker [docker-compose COMMAND] [SETS...]
+        stitchocker -h|--help
+
+Options:
+        -h  Shows this help text
+        -p  Path to stitching directory
+        -a  Alias to stitching directory
+
+Examples:
+        stitchocker up
+        stitchocker up default backend frontend
+        stitchocker -a my-projects-alias-from-env up default backend frontend
+```
+
+# Usage Example
+
+```
+~ $ cat ~/.bashrc
+export SERVICES="~/services"
+```
+
+```
+~ $ cd ~/services
+```
+
+```
+~/services $ tree .
+├── reverse-proxy
+    └── ...
+    └── docker-compose.ymlI
+├── mysql
+    └── ...
+    └── docker-compose.ymlI
+├── redis
+    └── ...
+    └── docker-compose.ymlI
+```
+
+```
+~ $ cd ~/projects/demo-project
+```
+
+```
+~/projects/demo-project $ tree .
+├── docker-compose.yml
+├── platform
+    └── ...
+    └── docker-compose.ymlI
+├── landing
+    └── ...
+    └── docker-compose.ymlI
+├── storybook
+    └── ...
+    └── docker-compose.ymlI
+```
+
+```
+~/projects/demo-project $ cat docker-compose.yml
+sets:
+    default:
+        - @services
+        - platform
+        - landing
+        - @development
+
+    services:
+        - services/reverse-proxy
+        - services/mysql
+        - services/redis
+    
+    development:
+        - storybook
+```
+
+```
+~/projects/demo-project $ stitchocker up
+Starting reverse-proxy_proxy_1 ... done
+Starting mysql_mysql_1 ... done
+Starting redis_redis_1 ... done
+Starting platform_platform_1 ... done
+Starting landing_landing_1 ... done
+Starting storybook_storybook_1 ... done
+```
+
+or
+
+```
+~/projects/demo-project $ stitchocker stop
+Stoping reverse-proxy_proxy_1 ... done
+Stoping mysql_mysql_1 ... done
+Stoping redis_redis_1 ... done
+Stoping platform_platform_1 ... done
+Stoping landing_landing_1 ... done
+Stoping storybook_storybook_1 ... done
+```
+
+or
+
+```
+~/projects/demo-project $ stitchocker up services
+Starting reverse-proxy_proxy_1 ... done
+Starting mysql_mysql_1 ... done
+Starting redis_redis_1 ... done
+```
+
+or
+
+```
+~/projects/demo-project $ stitchocker up services devolpment
+Starting reverse-proxy_proxy_1 ... done
+Starting mysql_mysql_1 ... done
+Starting redis_redis_1 ... done
+Stoping storybook_storybook_1 ... done
+```
+
+And so on :)
 
 # Copyright and license
 
