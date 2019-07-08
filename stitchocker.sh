@@ -120,7 +120,7 @@ function scr
 				fi
 
 				echo
-				scr_info "$(echo "$command" | sed 's/.*/\u&/') $set set:"
+				scr_info "$(echo "$command" | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}') $set set:"
 
 				for service_alias in ${services}; do
 					if [[ $service_alias == *"@"* ]]; then
@@ -196,7 +196,7 @@ function scr_env
 
     local env_path="$(eval "echo \"\$$env\"")"
 
-    if [ "$env_alias" != "$env_additional_path" ]
+    if [ ! -z "$env_additional_path" && "$env_alias" != "$env_additional_path" ]
     then
         env_path="$env_path/$env_additional_path"
     fi
