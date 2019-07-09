@@ -10,8 +10,14 @@
 
 The easiest way to install the latest binaries for Linux and Mac is to run this in a shell:
 
+**via curl**
 ```bash
-curl -sSf https://raw.githubusercontent.com/alexaandrov/stitchocker/master/install.sh | sudo bash
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/alexaandrov/stitchocker/master/install.sh)"
+```
+
+**via wget**
+```bash
+sudo bash -c "$(wget -O- https://raw.githubusercontent.com/alexaandrov/stitchocker/master/install.sh)"
 ```
 
 ### Manual installation
