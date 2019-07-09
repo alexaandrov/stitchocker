@@ -68,6 +68,7 @@ sets:
         @services/service-name-in-services-alias
         
         # You can also specify the absolute path to the directory with the service docker compose config
+        
         ~/you-services-dir/another-directory/service-name
         /home/user/you-services-dir/another-directory/service-name
 
