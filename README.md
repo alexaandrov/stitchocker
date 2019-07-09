@@ -10,7 +10,7 @@
 
 The easiest way to install the latest binaries for Linux and Mac is to run this in a shell:
 
-```sh
+```bash
 curl -sSf https://raw.githubusercontent.com/alexaandrov/stitchocker/master/install.sh | sudo bash
 ```
 
@@ -26,20 +26,20 @@ And then install script manually:
 
 Option 1
 
-```sh
+```bash
 sudo cp /path-to-release/stitchocker.sh /usr/local/bin/stitchocker
 sudo chmod +x /usr/local/bin/stitchocker
 ```
 
 Option 2
 
-```
+```bash
 chmod +x /path-to-release/stitchocker.sh
 ```
 
 In your .bashrc
 
-```
+```bash
 alias stitchocker="/path-to-release/stitchocker.sh"
 ```
 
@@ -49,7 +49,7 @@ First create in your services parent directory `docker-compose.yml' file.
 
 This config file should be looks like:
 
-```
+```yaml
 sets:
     # Default set running by default
     default:
@@ -82,19 +82,19 @@ sets:
 
 Then run in your shell:
 
-```
+```bash
 stitchocker up
 ```
 
 Also you can run stitchocker in debug mode:
 
-```
+```bash
 export STITCHOCKER_DEBUG=true
 stitchocker up
 ```
 
 Stitchocker help message
-```
+```bash
 $ stitchocker -h
 
 Usage:
@@ -115,16 +115,16 @@ Examples:
 
 # Usage Example
 
-```
+```bash
 ~ $ cat ~/.bashrc
 export SERVICES="~/services"
 ```
 
-```
+```bash
 ~ $ cd ~/services
 ```
 
-```
+```bash
 ~/services $ tree .
 ├── reverse-proxy
     └── ...
@@ -137,11 +137,11 @@ export SERVICES="~/services"
     └── docker-compose.yml
 ```
 
-```
+```bash
 ~ $ cd ~/projects/demo-project
 ```
 
-```
+```bash
 ~/projects/demo-project $ tree .
 ├── docker-compose.yml
 ├── platform
@@ -155,7 +155,7 @@ export SERVICES="~/services"
     └── docker-compose.yml
 ```
 
-```
+```bash
 ~/projects/demo-project $ cat docker-compose.yml
 sets:
     default:
@@ -173,7 +173,7 @@ sets:
         - storybook
 ```
 
-```
+```bash
 ~/projects/demo-project $ stitchocker up
 Starting reverse-proxy_proxy_1 ... done
 Starting mysql_mysql_1 ... done
@@ -185,7 +185,7 @@ Starting storybook_storybook_1 ... done
 
 or
 
-```
+```bash
 ~/projects/demo-project $ stitchocker stop
 Stoping reverse-proxy_proxy_1 ... done
 Stoping mysql_mysql_1 ... done
@@ -197,7 +197,7 @@ Stoping storybook_storybook_1 ... done
 
 or
 
-```
+```bash
 ~/projects/demo-project $ stitchocker up services
 Starting reverse-proxy_proxy_1 ... done
 Starting mysql_mysql_1 ... done
@@ -206,7 +206,7 @@ Starting redis_redis_1 ... done
 
 or
 
-```
+```bash
 ~/projects/demo-project $ stitchocker up services devolpment
 Starting reverse-proxy_proxy_1 ... done
 Starting mysql_mysql_1 ... done
