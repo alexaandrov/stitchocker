@@ -11,14 +11,18 @@
 function scr
 {
 	local fn="stitchocker"
+	local version="0.0.5"
+	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
 		$fn [-a <arg>...] [alias] [docker-compose COMMAND] [SETS...]
 		$fn [docker-compose COMMAND] [SETS...]
 		$fn -h|--help
+		$fn -v|--version
 
 	Options:
 		-h  Shows this help text
+		-v  Shows $fn version
 		-p  Path to stitching directory
 		-a  Alias to stitching directory
 		
@@ -181,13 +185,12 @@ function scr
 			eval "$exec $path ${@:3}"
 		;;
 		# Help page
-		"-h")
+		"-h" | "--help")
 			echo "$help"
 			exit 0
 		;;
-		# Help page
-		"--help")
-			echo "$help"
+		"-v" | "--version")
+			echo "$version_info"
 			exit 0
 		;;
 		# Default path flag wrapper
