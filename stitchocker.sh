@@ -107,6 +107,7 @@ function scr
 						for set in $flags; do
 							eval "$exec $path $command $set"
 						done
+						exit 1
 					fi
 					local set="$first_flag"
 				else
