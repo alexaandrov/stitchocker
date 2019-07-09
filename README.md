@@ -56,19 +56,28 @@ sets:
         # You can refer to the services that are in the directory with the stithocker config (parent directory)
 
         parent-service-name
+        
+        # You can also point to relative sub directories
+        
+        folder-in-parent/another-folder/parent-service-name
 
         # You can refer to the exported paths in your shell config (eg ~/.bashrc).
         # In your shell config in this case should be:
         # export SERVICES="/absolute-path-to-services-dir"
 
-        services/service-name-in-services-alias
+        @services/service-name-in-services-alias
+        
+        # You can also specify the absolute path to the directory with the service docker compose config
+        ~/you-services-dir/another-directory/service-name
+        /home/user/you-services-dir/another-directory/service-name
 
         # You can import your custom sets
 
         @custom
+
     custom:
         another-parent-service-name
-        services/another-service-name-in-services-alias
+        @services/another-service-name-in-services-alias
 ```
 
 Then run in your shell:
@@ -152,13 +161,13 @@ sets:
     default:
         - @services
         - platform
-        - landing
+        - frontend-services/landing
         - @development
 
     services:
-        - services/reverse-proxy
-        - services/mysql
-        - services/redis
+        - @services/reverse-proxy
+        - /home/demo-user/services/mysql
+        - ~/services/mysql
     
     development:
         - storybook

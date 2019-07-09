@@ -15,7 +15,7 @@ function scr_install
 
     scr_info "Downloading $stitchocker_name"
 
-    curl --url $stitchoker_uri --output $stitchocker_tmp_path
+    curl -H 'Cache-Control: no-cache' --url $stitchoker_uri --output $stitchocker_tmp_path
 
     scr_info "Installing $stitchocker_name"
 

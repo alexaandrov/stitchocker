@@ -121,20 +121,33 @@ function scr
 
 				echo
 				scr_info "$(echo "$command" | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}') $set set:"
-
+				
 				for service_alias in ${services}; do
-					if [[ $service_alias == *"@"* ]]; then
-						local set="${service_alias//@}"
-						eval "$exec $path $command $set"
-					else
-						if [[ $service_alias == *"/"* ]]; then
+					local service_alias_head="$(echo $service_alias | head -c 1)"
+					if [[ $service_alias == *"/"* ]]; then
+						if [[ $service_alias_head == "@" ]]; then
+							local service_alias="${service_alias//@}"
 							local service_path="$(scr_env $service_alias)"
+						elif [[ $service_alias_head == "/" || $service_alias_head == "~" ]]; then
+							local service_path="$service_alias"
 						else
 							local service_path="$path/$service_alias"
 						fi
 
 						local cmd="$exec $service_path $command"
-
+						if [[ $command != "up" ]]; then
+							cmd="$cmd"
+						else
+							cmd="$cmd -d"
+						fi
+						eval $cmd
+					elif [[ $service_alias_head == "@" ]]; then
+						local set="${service_alias//@}"
+						eval "$exec $path $command $set"
+					else
+						local service_path="$path/$service_alias"
+						local cmd="$exec $service_path $command"
+	
 						if [[ $command != "up" ]]; then
 							cmd="$cmd"
 						else
