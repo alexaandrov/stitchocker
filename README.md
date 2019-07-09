@@ -221,7 +221,7 @@ or
 Starting reverse-proxy_proxy_1 ... done
 Starting mysql_mysql_1 ... done
 Starting redis_redis_1 ... done
-Stoping storybook_storybook_1 ... done
+Starting storybook_storybook_1 ... done
 ```
 
 And so on :)
