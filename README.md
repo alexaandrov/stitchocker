@@ -158,6 +158,9 @@ export SERVICES="~/services"
 
 ```bash
 ~/projects/demo-project $ cat docker-compose.yml
+```
+
+```yaml
 sets:
     default:
         - @services
