@@ -86,6 +86,14 @@ sets:
     custom:
         another-parent-service-name
         @services/another-service-name-in-services-alias
+        
+# Use this if you want to forward an environment from config to each service
+# You also need in the docker compose service config for which you need
+# to use the global environment of the project to specify "env_file: .env"
+# Then you can test services environment via command "stitchocker config"
+# Read more about env_file here: https://docs.docker.com/compose/compose-file/#env_file
+
+env: parent-path-to-env-file
 ```
 
 Then run in your shell:
