@@ -104,15 +104,18 @@ Stitchocker help message
 ```bash
 $ stitchocker -h
 
-Usage:
+ Usage:
         stitchocker [-a <arg>...] [alias] [docker-compose COMMAND] [SETS...]
         stitchocker [docker-compose COMMAND] [SETS...]
         stitchocker -h|--help
+        stitchocker -v|--version
 
 Options:
-        -h  Shows this help text
-        -p  Path to stitching directory
-        -a  Alias to stitching directory
+        -h|--help            Shows this help text
+        -v|--version         Shows stitchocker version
+        --update             Updates stitchocker to the latest stable version
+        -p                   Path to stitching directory
+        -a                   Alias to stitching directory
 
 Examples:
         stitchocker up

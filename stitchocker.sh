@@ -21,10 +21,11 @@ function scr
 		$fn -v|--version
 
 	Options:
-		-h  Shows this help text
-		-v  Shows $fn version
-		-p  Path to stitching directory
-		-a  Alias to stitching directory
+		-h|--help            Shows this help text
+		-v|--version         Shows $fn version
+		--update             Updates $fn to the latest stable version
+		-p                   Path to stitching directory
+		-a                   Alias to stitching directory
 		
 	Examples:
 		$fn up
@@ -57,8 +58,18 @@ function scr
 			echo "$help"
 			exit 0
 		;;
+		# --------------------------------------------------------------
+		# Version info
+		# --------------------------------------------------------------
 		"-v" | "--version")
 			echo "$version_info"
+			exit 0
+		;;
+		# --------------------------------------------------------------
+		# Updates to the latest stable version
+		# --------------------------------------------------------------
+		"--update")
+			sudo bash -c "$(curl -H 'Cache-Control: no-cache' -fsSL https://raw.githubusercontent.com/alexaandrov/stitchocker/master/install.sh)"
 			exit 0
 		;;
 		# --------------------------------------------------------------
