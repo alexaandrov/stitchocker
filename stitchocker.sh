@@ -50,7 +50,20 @@ function scr
 
     # Entrypoint
 	case $1 in
-		# Main handler
+		# --------------------------------------------------------------
+		# Help info
+		# --------------------------------------------------------------
+		"-h" | "--help")
+			echo "$help"
+			exit 0
+		;;
+		"-v" | "--version")
+			echo "$version_info"
+			exit 0
+		;;
+		# --------------------------------------------------------------
+		# The entry point for all commands
+		# --------------------------------------------------------------
 		$path_flag)
 			# Function arguments
 			local path="$2"
@@ -58,6 +71,7 @@ function scr
 			local first_flag="$4"
 			local second_flag="$5"
 			local flags="${@:4}"
+			local scr_config_env="test"
 
 			if [[ -z $path ]]; then
 				scr_error "Path not specified"
@@ -162,6 +176,12 @@ function scr
 					fi
 				done
 			else
+				# --------------------------------------------------------------
+				# The main unit where commands are generated for docker compose
+				# --------------------------------------------------------------
+
+				scr_env_handle "$initial_path" "$scr_config_env" "$path"
+
 				local cmd="docker-compose -f $config_path $command $flags"
 
 				if [[ $debug == false ]]; then
@@ -169,9 +189,14 @@ function scr
 				else
 					echo $cmd
 				fi
+
+				scr_env_handle -r "$initial_path" "$scr_config_env" "$path"
 			fi
 		;;
-		# Path flag wrapper
+		# --------------------------------------------------------------
+		# Entry point wrapper
+		# Triggered when stitchocker -a {alias} {command}
+		# --------------------------------------------------------------
 		"-a")
 			if [[ -z $2 ]]; then
 				scr_error "Path alias not specified"
@@ -182,20 +207,16 @@ function scr
 			fi
 
 			local path=$(scr_env $2)
+			local initial_path=$path
 			eval "$exec $path ${@:3}"
 		;;
-		# Help page
-		"-h" | "--help")
-			echo "$help"
-			exit 0
-		;;
-		"-v" | "--version")
-			echo "$version_info"
-			exit 0
-		;;
-		# Default path flag wrapper
+		# --------------------------------------------------------------
+		# Default entry point wrapper
+		# Triggered when stitchocker {command}
+		# --------------------------------------------------------------
 		*)
 			local path=$(pwd)
+			local initial_path=$path
 			eval "$exec $path $command $@"
 		;;
 	esac
@@ -205,6 +226,9 @@ function scr
 # Tools
 # -----------------------------------------------
 
+##
+# Returns absolute path to user env
+##
 function scr_env
 {
     local env_alias=$(echo $1 | cut -d "/" -f 1)
@@ -222,6 +246,49 @@ function scr_env
     fi
 
     echo $env_path
+}
+
+##
+# Adds an environment from config to each service
+##
+function scr_env_handle
+{
+	if [[ $1 != "-r" ]]; then
+		local scr_path="$1"
+		local scr_env="$2"
+		local service_path="$3"
+	else
+		local scr_path="$2"
+		local scr_env="$3"
+		local service_path="$4"
+	fi
+
+	if [[ ! -z $scr_path && ! -z $scr_env ]]; then
+		local scr_env_path="$scr_path/$scr_env"
+		local service_env_name=".env"
+		local service_env_tmp_name=".env.scr"
+		local service_env_path="$service_path/$service_env_name"
+		local service_env_tmp_path="$service_path/$service_env_tmp_name"
+	
+		if [[ $1 != "-r" ]]; then
+			if [[ -f $scr_env_path ]]; then
+				if [[ -f $service_env_path ]]; then
+					cp $service_env_path $service_env_tmp_path
+				fi
+		
+				echo >> $service_env_path
+				cat $scr_env_path >> $service_env_path
+			fi
+		else
+			if [[ -f $service_env_path ]]; then
+				rm $service_env_path
+			fi
+		
+			if [[ -f $service_env_tmp_path ]]; then
+				mv $service_env_tmp_path $service_env_path;
+			fi
+		fi
+	fi
 }
 
 # --
