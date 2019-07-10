@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/alexaandrov/stitchocker/blob/master/LICENSE)
 [![Release](https://img.shields.io/github/release/alexaandrov/stitchocker.svg?style=flat-square)](https://github.com/alexaandrov/stitchocker/releases/latest)
 ![GitHub file size in bytes](https://img.shields.io/github/size/alexaandrov/stitchocker/stitchocker.sh.svg)
+![GitHub top language](https://img.shields.io/github/languages/top/alexaandrov/stitchocker.svg)
 
 **Stitchocker** its command line utility for stitching your docker-compose services.
 
