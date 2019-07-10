@@ -11,7 +11,7 @@
 function scr
 {
 	local fn="stitchocker"
-	local version="0.0.7"
+	local version="0.0.8"
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
@@ -92,6 +92,7 @@ function scr
 			local debug_export="export $(echo $debug_env | awk '{print toupper($0)}')"
 			eval "$debug_export=true"
 			$self ${@:2}
+			eval "$debug_export=false"
 		;;
 		# --------------------------------------------------------------
 		# Runs all commands in verbose mode
@@ -100,6 +101,7 @@ function scr
 			local verbose_export="export $(echo $verbose_env | awk '{print toupper($0)}')"
 			eval "$verbose_export=true"
 			$self ${@:2}
+			eval "$verbose_export=false"
 		;;
 		# --------------------------------------------------------------
 		# The entry point for all commands
