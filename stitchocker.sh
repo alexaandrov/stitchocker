@@ -15,15 +15,17 @@ function scr
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
-		$fn [-a <arg>...] [alias] [docker-compose COMMAND] [SETS...]
-		$fn [docker-compose COMMAND] [SETS...]
+		$fn [--verbose|--debug] [-a <env_alias>] [docker-compose COMMAND] [SETS...]
 		$fn -h|--help
 		$fn -v|--version
+		
 
 	Options:
 		-h|--help            Shows this help text
 		-v|--version         Shows $fn version
 		--update             Updates $fn to the latest stable version
+		--debug              Runs all commands in debug mode
+		--verbose            Runs all commands in verbose mode
 		-p                   Path to stitching directory
 		-a                   Alias to stitching directory
 		
@@ -31,13 +33,24 @@ function scr
 		$fn up
 		$fn up default backend frontend
 		$fn -a my-projects-alias-from-env up default backend frontend
+		$fn --debug -a my-projects-alias-from-env up default backend frontend
+		$fn --verbose -a my-projects-alias-from-env up default backend frontend
 	"
 
-	local debug=$(scr_env stitchocker_debug)
+	local debug_env=""$fn"_debug"
+	local debug=$(scr_env $debug_env)
 	if [[ ! -z $debug && $debug == true ]]; then
 		debug=true
 	else
 		debug=false
+	fi
+	
+	local verbose_env=""$fn"_verbose"
+	local verbose=$(scr_env $verbose_env)
+	if [[ ! -z $verbose && $verbose == true ]]; then
+		verbose=true
+	else
+		verbose=false
 	fi
 
 	local self="scr"
@@ -71,6 +84,22 @@ function scr
 		"--update")
 			sudo bash -c "$(curl -H 'Cache-Control: no-cache' -fsSL https://raw.githubusercontent.com/alexaandrov/stitchocker/master/install.sh)"
 			exit 0
+		;;
+		# --------------------------------------------------------------
+		# Runs all commands in debug mode
+		# --------------------------------------------------------------
+		"--debug")
+			local debug_export="export $(echo $debug_env | awk '{print toupper($0)}')"
+			eval "$debug_export=true"
+			$self ${@:2}
+		;;
+		# --------------------------------------------------------------
+		# Runs all commands in verbose mode
+		# --------------------------------------------------------------
+		"--verbose")
+			local verbose_export="export $(echo $verbose_env | awk '{print toupper($0)}')"
+			eval "$verbose_export=true"
+			$self ${@:2}
 		;;
 		# --------------------------------------------------------------
 		# The entry point for all commands
@@ -196,6 +225,9 @@ function scr
 				local cmd="docker-compose -f $config_path $command $flags"
 
 				if [[ $debug == false ]]; then
+					if [[ $verbose == true ]]; then
+						echo $cmd
+					fi
 					eval $cmd
 				else
 					echo $cmd

@@ -113,16 +113,18 @@ Stitchocker help message
 ```bash
 $ stitchocker -h
 
- Usage:
-        stitchocker [-a <arg>...] [alias] [docker-compose COMMAND] [SETS...]
-        stitchocker [docker-compose COMMAND] [SETS...]
+Usage:
+        stitchocker [--verbose|--debug] [-a <env_alias>] [docker-compose COMMAND] [SETS...]
         stitchocker -h|--help
         stitchocker -v|--version
+
 
 Options:
         -h|--help            Shows this help text
         -v|--version         Shows stitchocker version
         --update             Updates stitchocker to the latest stable version
+        --debug              Runs all commands in debug mode
+        --verbose            Runs all commands in verbose mode
         -p                   Path to stitching directory
         -a                   Alias to stitching directory
 
@@ -130,6 +132,8 @@ Examples:
         stitchocker up
         stitchocker up default backend frontend
         stitchocker -a my-projects-alias-from-env up default backend frontend
+        stitchocker --debug -a my-projects-alias-from-env up default backend frontend
+        stitchocker --verbose -a my-projects-alias-from-env up default backend frontend
 ```
 
 # Usage Example
