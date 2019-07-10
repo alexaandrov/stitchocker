@@ -105,8 +105,13 @@ stitchocker up
 Also you can run stitchocker in debug mode:
 
 ```bash
-export STITCHOCKER_DEBUG=true
-stitchocker up
+stitchocker --debug up
+```
+
+Or in verbose mode:
+
+```bash
+stitchocker --verbose up
 ```
 
 Stitchocker help message
