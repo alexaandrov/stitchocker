@@ -222,7 +222,7 @@ function scr
 				# The main unit where commands are generated for docker compose
 				# --------------------------------------------------------------
 
-				scr_env_handle "$initial_path" "$scr_config_env" "$path"
+				scr_env_handle_d "$initial_path" "$scr_config_env" "$path"
 
 				local cmd="docker-compose -f $config_path $command $flags"
 
@@ -230,12 +230,16 @@ function scr
 					if [[ $verbose == true ]]; then
 						echo $cmd
 					fi
-					eval $cmd
+					echo "$(cd $initial_path; $cmd)"
 				else
 					echo $cmd
 				fi
 
-				scr_env_handle -r "$initial_path" "$scr_config_env" "$path"
+        if [[ -f "$initial_path/.env" ]]; then
+          rm "$initial_path/.env"
+        fi
+
+				#scr_env_handle -r "$initial_path" "$scr_config_env" "$path"
 			fi
 		;;
 		# --------------------------------------------------------------
@@ -293,6 +297,34 @@ function scr_env
     echo $env_path
 }
 
+function scr_env_handle_d
+{
+  local scr_path="$1"
+  local scr_env="$2"
+  local service_path="$3"
+
+
+  if [[ ! -z $scr_path && ! -z $scr_env ]]; then
+    local scr_env_path="$scr_path/$scr_env"
+		local service_env_name=".env"
+		local service_env_tmp_name=".env.scr"
+		local service_env_path="$service_path/$service_env_name"
+		local service_env_tmp_path="$service_path/$service_env_tmp_name"
+
+    if [[ -f $service_env_path ]]; then
+      cp $service_env_path "$scr_path/.env"
+    else
+      touch "$scr_path/.env"
+    fi
+
+    if [[ -f $scr_env_path && -f "$scr_path/.env" ]]; then
+      echo >> "$scr_path/.env"
+      cat $scr_env_path >> "$scr_path/.env"
+    fi
+
+  fi
+}
+
 ##
 # Adds an environment from config to each service
 ##
@@ -307,6 +339,9 @@ function scr_env_handle
 		local scr_env="$3"
 		local service_path="$4"
 	fi
+	#echo $scr_path
+	#echo $scr_env
+	#echo $service_path
 
 	if [[ ! -z $scr_path && ! -z $scr_env ]]; then
 		local scr_env_path="$scr_path/$scr_env"
@@ -314,20 +349,27 @@ function scr_env_handle
 		local service_env_tmp_name=".env.scr"
 		local service_env_path="$service_path/$service_env_name"
 		local service_env_tmp_path="$service_path/$service_env_tmp_name"
+		echo $scr_env_path
+		#echo $service_env_path
 	
 		if [[ $1 != "-r" ]]; then
+			echo "!-r"
 			if [[ -f $scr_env_path ]]; then
 				if [[ -f $service_env_path ]]; then
 					cp $service_env_path $service_env_tmp_path
 				fi
-		
+
 				echo >> $service_env_path
 				cat $scr_env_path >> $service_env_path
+
+				cat $scr_env_path
+				echo "Copied"
+
 			fi
 		else
-			if [[ -f $service_env_path ]]; then
-				rm $service_env_path
-			fi
+			#if [[ -f $service_env_path ]]; then
+				#rm $service_env_path
+			#fi
 		
 			if [[ -f $service_env_tmp_path ]]; then
 				mv $service_env_tmp_path $service_env_path;
