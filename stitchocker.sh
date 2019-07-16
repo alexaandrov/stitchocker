@@ -11,7 +11,7 @@
 function scr
 {
 	local fn="stitchocker"
-	local version="0.0.9"
+	local version="0.0.10"
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
@@ -123,16 +123,23 @@ function scr
 				scr_error "Command not specified"
 			fi
 
-			# General variables
-			local config="docker-compose.yaml"
-			local config_path="$path/$config"
+			local available_config_names=("$fn.yml" "$fn.yaml" "docker-compose.yaml" "docker-compose.yml")
+			
+			local custom_config_env=""$fn"_config"
+			local custom_config_name=$(scr_env $custom_config_env)
+			if [[ ! -z $custom_config_name ]]; then
+				available_config_names+=($custom_config_name)
+			fi
 
-			if [[ ! -e $config_path ]]; then
-				config="docker-compose.yml"
-				config_path="$path/$config"
-				if [[ ! -e $config_path ]]; then
-					scr_error "No such file or directory: '$config_path'"
+			local config_path=""
+			for config_name in ${available_config_names[@]}; do
+				if [[ -f "$path/$config_name" ]]; then
+					config_path="$path/$config_name"
 				fi
+			done
+
+			if [[ ! -f $config_path ]]; then
+				scr_error "No such file or directory: '$config_path'"
 			fi
 
 			local default_set=$(scr_env stitchocker_default_set)

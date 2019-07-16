@@ -247,6 +247,30 @@ Starting storybook_storybook_1 ... done
 
 And so on :)
 
+# Configuration
+
+## Custom stitchocker config name
+
+By default stitchocker can handle:
+- stitchocker.yml
+- stitchocker.yaml
+- docker-compose.yml
+- docker-compose.yaml
+
+You can change it:
+```
+export STITCHOCKER_CONFIG=your-custom-config-name
+```
+
+## Custom stitchocker default set name
+
+By default the set name is `default`
+
+You can change it:
+```
+export STITCHOCKER_DEFAULT_SET=you-default-set-name
+```
+
 # Copyright and license
 
 Code released under the [Apache 2.0](https://raw.githubusercontent.com/alexaandrov/stitchocker/master/LICENSE) license. See LICENSE for the full license text.
