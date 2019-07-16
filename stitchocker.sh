@@ -11,7 +11,7 @@
 function scr
 {
 	local fn="stitchocker"
-	local version="0.0.8"
+	local version="0.0.9"
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
@@ -123,19 +123,6 @@ function scr
 				scr_error "Command not specified"
 			fi
 
-			# if [[ $first_flag == "--all" ]]; then
-			# 	for service_name in $(cd $path && ls -d */) ; do
-			# 		local path="$path/$service_name"
-			# 		local cmd="$exec $path $command"
-			# 		if [[ $command != "up" ]]; then
-			# 			local cmd="$cmd $flags"
-			# 		else
-			# 			local cmd="$cmd -d"
-			# 		fi
-			# 		eval $cmd
-			# 	done
-			# fi
-
 			# General variables
 			local config="docker-compose.yaml"
 			local config_path="$path/$config"
@@ -222,7 +209,7 @@ function scr
 				# The main unit where commands are generated for docker compose
 				# --------------------------------------------------------------
 
-				scr_env_handle_d "$initial_path" "$scr_config_env" "$path"
+				scr_env_handle "$initial_path" "$scr_config_env" "$path"
 
 				local cmd="docker-compose -f $config_path $command $flags"
 
@@ -235,11 +222,7 @@ function scr
 					echo $cmd
 				fi
 
-        if [[ -f "$initial_path/.env" ]]; then
-          rm "$initial_path/.env"
-        fi
-
-				#scr_env_handle -r "$initial_path" "$scr_config_env" "$path"
+				scr_env_handle -c "$initial_path"
 			fi
 		;;
 		# --------------------------------------------------------------
@@ -280,49 +263,21 @@ function scr
 ##
 function scr_env
 {
-    local env_alias=$(echo $1 | cut -d "/" -f 1)
-    local env_additional_path=${1//"$env_alias/"}
-    local env=$(echo $env_alias | awk '{print toupper($0)}')
+  local env_alias=$(echo $1 | cut -d "/" -f 1)
+  local env_additional_path=${1//"$env_alias/"}
+  local env=$(echo $env_alias | awk '{print toupper($0)}')
 
-    local env_path="$(eval "echo \"\$$env\"")"
+  local env_path="$(eval "echo \"\$$env\"")"
 
-    if [[ ! -z "$env_additional_path" && "$env_alias" != "$env_additional_path" ]]; then
-        env_path="$env_path/$env_additional_path"
-    fi
-
-    if [[ $env_path == *"himBHs"* || -z $env_path ]]; then
-        echo "null"
-    fi
-
-    echo $env_path
-}
-
-function scr_env_handle_d
-{
-  local scr_path="$1"
-  local scr_env="$2"
-  local service_path="$3"
-
-
-  if [[ ! -z $scr_path && ! -z $scr_env ]]; then
-    local scr_env_path="$scr_path/$scr_env"
-		local service_env_name=".env"
-		local service_env_tmp_name=".env.scr"
-		local service_env_path="$service_path/$service_env_name"
-		local service_env_tmp_path="$service_path/$service_env_tmp_name"
-
-    if [[ -f $service_env_path ]]; then
-      cp $service_env_path "$scr_path/.env"
-    else
-      touch "$scr_path/.env"
-    fi
-
-    if [[ -f $scr_env_path && -f "$scr_path/.env" ]]; then
-      echo >> "$scr_path/.env"
-      cat $scr_env_path >> "$scr_path/.env"
-    fi
-
+  if [[ ! -z "$env_additional_path" && "$env_alias" != "$env_additional_path" ]]; then
+      env_path="$env_path/$env_additional_path"
   fi
+
+  if [[ $env_path == *"himBHs"* || -z $env_path ]]; then
+      echo "null"
+  fi
+
+  echo $env_path
 }
 
 ##
@@ -330,52 +285,35 @@ function scr_env_handle_d
 ##
 function scr_env_handle
 {
-	if [[ $1 != "-r" ]]; then
-		local scr_path="$1"
-		local scr_env="$2"
-		local service_path="$3"
-	else
-		local scr_path="$2"
-		local scr_env="$3"
-		local service_path="$4"
-	fi
-	#echo $scr_path
-	#echo $scr_env
-	#echo $service_path
-
-	if [[ ! -z $scr_path && ! -z $scr_env ]]; then
-		local scr_env_path="$scr_path/$scr_env"
-		local service_env_name=".env"
-		local service_env_tmp_name=".env.scr"
-		local service_env_path="$service_path/$service_env_name"
-		local service_env_tmp_path="$service_path/$service_env_tmp_name"
-		echo $scr_env_path
-		#echo $service_env_path
-	
-		if [[ $1 != "-r" ]]; then
-			echo "!-r"
-			if [[ -f $scr_env_path ]]; then
-				if [[ -f $service_env_path ]]; then
-					cp $service_env_path $service_env_tmp_path
-				fi
-
-				echo >> $service_env_path
-				cat $scr_env_path >> $service_env_path
-
-				cat $scr_env_path
-				echo "Copied"
-
-			fi
-		else
-			#if [[ -f $service_env_path ]]; then
-				#rm $service_env_path
-			#fi
-		
-			if [[ -f $service_env_tmp_path ]]; then
-				mv $service_env_tmp_path $service_env_path;
-			fi
-		fi
-	fi
+  local scr_env_name=".env"
+  if [[ $1 != "-c" ]]; then
+    local scr_path="$1"
+    local scr_config_env="$2"
+    local scr_env_path="$scr_path/$scr_env_name"
+    
+    if [[ ! -z $scr_path && ! -z $scr_config_env ]]; then
+      local scr_config_env_path="$scr_path/$scr_config_env"
+      local service_env_name=".env"
+      local service_env_path="$service_path/$service_env_name"
+  
+      if [[ -f $service_env_path ]]; then
+        cp $service_env_path $scr_env_path
+      else
+        touch $scr_env_path
+      fi
+  
+      if [[ -f $scr_config_env_path && -f $scr_env_path ]]; then
+        echo >> $scr_env_path
+        cat $scr_config_env_path >> $scr_env_path
+      fi
+    fi
+  else
+    local scr_path="$2"
+    local scr_env_path="$scr_path/$scr_env_name"
+    if [[ -f $scr_env_path ]]; then
+      rm $scr_env_path
+    fi
+  fi
 }
 
 # --
@@ -404,57 +342,57 @@ function scr_error {
 # From https://github.com/jasperes/bash-yaml
 ##
 function scr_parse_yaml() {
-    local yaml_file=$1
-    local prefix=$2
-    local s
-    local w
-    local fs
+  local yaml_file=$1
+  local prefix=$2
+  local s
+  local w
+  local fs
 
-    s='[[:space:]]*'
-    w='[a-zA-Z0-9_.-]*'
-    fs="$(echo @|tr @ '\034')"
+  s='[[:space:]]*'
+  w='[a-zA-Z0-9_.-]*'
+  fs="$(echo @|tr @ '\034')"
 
-    (
-        sed -e '/- [^\“]'"[^\']"'.*: /s|\([ ]*\)- \([[:space:]]*\)|\1-\'$'\n''  \1\2|g' |
+  (
+      sed -e '/- [^\“]'"[^\']"'.*: /s|\([ ]*\)- \([[:space:]]*\)|\1-\'$'\n''  \1\2|g' |
 
-        sed -ne '/^--/s|--||g; s|\"|\\\"|g; s/[[:space:]]*$//g;' \
-            -e "/#.*[\"\']/!s| #.*||g; /^#/s|#.*||g;" \
-            -e "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
-            -e "s|^\($s\)\($w\)${s}[:-]$s\(.*\)$s\$|\1$fs\2$fs\3|p" |
+      sed -ne '/^--/s|--||g; s|\"|\\\"|g; s/[[:space:]]*$//g;' \
+          -e "/#.*[\"\']/!s| #.*||g; /^#/s|#.*||g;" \
+          -e "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
+          -e "s|^\($s\)\($w\)${s}[:-]$s\(.*\)$s\$|\1$fs\2$fs\3|p" |
 
-        awk -F"$fs" '{
-            indent = length($1)/2;
-            if (length($2) == 0) { conj[indent]="+";} else {conj[indent]="";}
-            vname[indent] = $2;
-            for (i in vname) {if (i > indent) {delete vname[i]}}
-                if (length($3) > 0) {
-                    vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-                    printf("%s%s%s%s=(\"%s\")\n", "'"$prefix"'",vn, $2, conj[indent-1],$3);
-                }
-            }' |
+      awk -F"$fs" '{
+          indent = length($1)/2;
+          if (length($2) == 0) { conj[indent]="+";} else {conj[indent]="";}
+          vname[indent] = $2;
+          for (i in vname) {if (i > indent) {delete vname[i]}}
+              if (length($3) > 0) {
+                  vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+                  printf("%s%s%s%s=(\"%s\")\n", "'"$prefix"'",vn, $2, conj[indent-1],$3);
+              }
+          }' |
 
-        sed -e 's/_=/+=/g' |
+      sed -e 's/_=/+=/g' |
 
-        awk 'BEGIN {
-                FS="=";
-                OFS="="
-            }
-            /(-|\.).*=/ {
-                gsub("-|\\.", "_", $1)
-            }
-            { print }'
-    ) < "$yaml_file"
+      awk 'BEGIN {
+              FS="=";
+              OFS="="
+          }
+          /(-|\.).*=/ {
+              gsub("-|\\.", "_", $1)
+          }
+          { print }'
+  ) < "$yaml_file"
 }
 
 function scr_create_yaml_variables() {
-    local yaml_file="$1"
-    local prefix="$2"
+  local yaml_file="$1"
+  local prefix="$2"
 
 	if [[ ! -z $prefix ]]; then
 		scr_unset_yaml_variables $prefix
 	fi
 
-    eval "$(scr_parse_yaml "$yaml_file" "$prefix")"
+  eval "$(scr_parse_yaml "$yaml_file" "$prefix")"
 }
 
 function scr_unset_yaml_variables()
