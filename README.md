@@ -269,7 +269,7 @@ By default the set name is `default`
 
 You can change it:
 ```
-export STITCHOCKER_DEFAULT_SET=you-default-set-name
+export STITCHOCKER_DEFAULT_SET=your-default-set-name
 ```
 
 # Copyright and license
