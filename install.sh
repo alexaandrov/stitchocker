@@ -14,7 +14,7 @@ function scr_install
     local stitchocker_tmp_path="$destination_path/$stitchocker_name.sh"
     local stitchocker_bin_path="$bin_path/$stitchocker_name"
 
-    scr_info "Downloading $stitchocker_name"
+    scr_info "Downloading $stitchocker_name $stitchocker_stable_release"
 
     echo
     local http_code=$(curl -H 'Cache-Control: no-cache' --url $stitchoker_uri --output $stitchocker_tmp_path --write-out "%{http_code}")
@@ -38,7 +38,7 @@ function scr_install
     scr_info "Installation complete!"
     scr_info "Run $stitchocker_name -h to see the help"
     echo
-    scr_info $($stitchocker_name --version)
+    scr_info "Your $($stitchocker_name --version)"
 }
 
 function scr_info {
