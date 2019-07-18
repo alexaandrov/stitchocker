@@ -271,7 +271,7 @@ function scr
 function scr_env
 {
   local env_alias=$(echo $1 | cut -d "/" -f 1)
-  local env_additional_path=${1//"$env_alias/"}
+  local env_additional_path=${1//$env_alias\/}
   local env=$(echo $env_alias | awk '{print toupper($0)}')
 
   local env_path="$(eval "echo \"\$$env\"")"
