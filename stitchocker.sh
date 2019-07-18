@@ -11,7 +11,7 @@
 function scr
 {
 	local fn="stitchocker"
-	local version="0.0.11"
+	local version="0.0.12"
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
@@ -127,7 +127,7 @@ function scr
 			
 			local custom_config_env=""$fn"_config"
 			local custom_config_name=$(scr_env $custom_config_env)
-			if [[ ! -z $custom_config_name ]]; then
+			if [[ ! -z $custom_config_name  && $custom_config_name != "null" ]]; then
 				available_config_names+=($custom_config_name)
 			fi
 
@@ -139,7 +139,11 @@ function scr
 			done
 
 			if [[ ! -f $config_path ]]; then
-				scr_error "No such file or directory: '$config_path'"
+        echo
+				scr_error --no-exit "No config found for: $path"
+        echo
+        echo "Available config names: ${available_config_names[@]}"
+        exit 1
 			fi
 
 			local default_set=$(scr_env stitchocker_default_set)
@@ -336,8 +340,13 @@ function scr_info {
 function scr_error {
   local red=$(tput setaf 1)
   local reset=$(tput sgr0)
-  echo >&2 -e "${red}$@${reset}"
-  exit 1
+
+  if [[ $1 != "--no-exit" ]]; then
+    echo >&2 -e "${red}$@${reset}"
+    exit 1
+  else
+    echo >&2 -e "${red}${@:2}${reset}"
+  fi
 }
 
 # --
