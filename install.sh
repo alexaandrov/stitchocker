@@ -8,7 +8,7 @@ function scr_install
 
     local destination_path="/tmp"
     local bin_path="/usr/local/bin"
-    local stitchocker_stable_release="0.0.12"
+    local stitchocker_stable_release="0.0.13"
     local stitchoker_uri="https://raw.githubusercontent.com/alexaandrov/stitchocker/$stitchocker_stable_release/stitchocker.sh"
     local stitchocker_name="stitchocker"
     local stitchocker_tmp_path="$destination_path/$stitchocker_name.sh"
@@ -16,7 +16,13 @@ function scr_install
 
     scr_info "Downloading $stitchocker_name"
 
-    curl -H 'Cache-Control: no-cache' --url $stitchoker_uri --output $stitchocker_tmp_path
+    echo
+    local http_code=$(curl -H 'Cache-Control: no-cache' --url $stitchoker_uri --output $stitchocker_tmp_path --write-out "%{http_code}")
+
+    if [[ $http_code != 200 ]]; then
+      scr_error "An error occurred while downloading the $stitchocker_name. Try again later or manually download the $stitchocker_name."
+    fi
+    echo
 
     scr_info "Installing $stitchocker_name"
 
@@ -31,6 +37,8 @@ function scr_install
 
     scr_info "Installation complete!"
     scr_info "Run $stitchocker_name -h to see the help"
+    echo
+    scr_info $($stitchocker_name --version)
 }
 
 function scr_info {
