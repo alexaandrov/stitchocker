@@ -5,7 +5,7 @@
 ![GitHub file size in bytes](https://img.shields.io/github/size/alexaandrov/stitchocker/stitchocker.sh.svg)
 ![GitHub top language](https://img.shields.io/github/languages/top/alexaandrov/stitchocker.svg)
 
-**Stitchocker** its command line utility for stitching your docker-compose services.
+🌈 ***Stitchoker*** its a lightweight and fast command line utility utility for conveniently grouping your docker-compose multiple container services as a single application.
 
 # Installation
 
