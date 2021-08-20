@@ -11,7 +11,7 @@
 function scr
 {
 	local fn="stitchocker"
-	local version="0.0.12"
+	local version="0.0.13"
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
@@ -220,9 +220,20 @@ function scr
 				# The main unit where commands are generated for docker compose
 				# --------------------------------------------------------------
 
+        # Set default env config name
+        if [[ -z $scr_config_env ]]; then
+          local scr_config_env="$fn.env"
+        fi
+
 				scr_env_handle "$initial_path" "$scr_config_env" "$path"
 
-				local cmd="docker-compose -f $config_path $command $flags"
+        if [[ -f "$initial_path/.env" ]]; then
+          local cmd_env="--env-file $initial_path/.env"
+        else
+          local cmd_env=""
+        fi
+
+				local cmd="docker-compose $cmd_env -f $config_path $command $flags"
 
 				if [[ $debug == false ]]; then
 					if [[ $verbose == true ]]; then
@@ -306,19 +317,20 @@ function scr_env_handle
       local scr_config_env_path="$scr_path/$scr_config_env"
       local service_env_name=".env"
       local service_env_path="$service_path/$service_env_name"
-  
-      if [[ -f $service_env_path ]]; then
-        cp $service_env_path $scr_env_path
-      else
-        touch $scr_env_path
+
+      # If stitchocker env file exist use it
+      if [[ -f $scr_config_env_path ]]; then
+        cp $scr_config_env_path $scr_env_path
       fi
-  
-      if [[ -f $scr_config_env_path && -f $scr_env_path ]]; then
+
+      # If the service has its own env file, it will expand the existing env file
+      if [[ -f $service_env_path ]]; then
         echo >> $scr_env_path
-        cat $scr_config_env_path >> $scr_env_path
+        cat $service_env_path >> $scr_env_path
       fi
     fi
   else
+    # Remove temporary env file
     local scr_path="$2"
     local scr_env_path="$scr_path/$scr_env_name"
     if [[ -f $scr_env_path ]]; then
