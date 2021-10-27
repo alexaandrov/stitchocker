@@ -11,7 +11,7 @@
 function scr
 {
 	local fn="stitchocker"
-	local version="0.0.13"
+	local version="0.0.14"
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
@@ -113,7 +113,7 @@ function scr
 			local first_flag="$4"
 			local second_flag="$5"
 			local flags="${@:4}"
-			local scr_config_env="test"
+			local scr_config_env="$fn.env"
 
 			if [[ -z $path ]]; then
 				scr_error "Path not specified"
@@ -121,6 +121,13 @@ function scr
 
 			if [[ -z $command ]]; then
 				scr_error "Command not specified"
+			fi
+
+
+			if [[ $command == "reload" ]]; then
+			  $self -p $path down $flags
+			  $self -p $path up $flags
+			  exit 1
 			fi
 
 			local available_config_names=("$fn.yml" "$fn.yaml" "docker-compose.yaml" "docker-compose.yml")
@@ -219,8 +226,6 @@ function scr
 				# --------------------------------------------------------------
 				# The main unit where commands are generated for docker compose
 				# --------------------------------------------------------------
-
-        # Set default env config name
         if [[ -z $scr_config_env ]]; then
           local scr_config_env="$fn.env"
         fi
@@ -246,6 +251,7 @@ function scr
 
 				scr_env_handle -c "$initial_path"
 			fi
+			return 1
 		;;
 		# --------------------------------------------------------------
 		# Entry point wrapper
