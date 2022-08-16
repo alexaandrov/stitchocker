@@ -11,7 +11,7 @@
 function scr
 {
 	local fn="stitchocker"
-	local version="0.0.14"
+	local version="1.0.0"
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
@@ -123,6 +123,9 @@ function scr
 				scr_error "Command not specified"
 			fi
 
+			if [[ $command == "down" ]]; then
+			  $self -p $path stop $flags
+			fi
 
 			if [[ $command == "reload" ]]; then
 			  $self -p $path down $flags
