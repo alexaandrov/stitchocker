@@ -11,7 +11,7 @@
 function scr
 {
 	local fn="stitchocker"
-	local version="1.0.0"
+	local version="1.0.1"
 	local version_info="Stitchocker version $version"
 	local help="
 	Usage:
