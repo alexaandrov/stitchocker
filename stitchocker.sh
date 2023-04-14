@@ -241,7 +241,13 @@ function scr
           local cmd_env=""
         fi
 
-				local cmd="docker-compose $cmd_env -f $config_path $command $flags"
+        if docker compose version | grep "Docker Compose version" &> /dev/null; then
+          local docker_compose="docker compose"
+        elif docker-compose version | grep "Docker Compose version" &> /dev/null; then
+          local docker_compose="docker-compose"
+        fi
+
+				local cmd="$docker_compose $cmd_env -f $config_path $command $flags"
 
 				if [[ $debug == false ]]; then
 					if [[ $verbose == true ]]; then
