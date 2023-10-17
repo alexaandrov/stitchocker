@@ -4,10 +4,10 @@ install() {
   set -e
 
   # Set variables
-  
+
   local destination_path="/tmp"
   local bin_path="/usr/local/bin"
-  local stitchocker_stable_release="1.2.2"
+  local stitchocker_stable_release="1.2.3"
   local stitchoker_uri="https://raw.githubusercontent.com/alexaandrov/stitchocker/$stitchocker_stable_release/stitchocker.sh"
   local stitchocker_name="stitchocker"
   local stitchocker_tmp_path="$destination_path/$stitchocker_name.sh"

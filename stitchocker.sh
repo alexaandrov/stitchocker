@@ -10,14 +10,14 @@
 
 stitchocker() {
   local self="stitchocker"
-  local version="1.2.2"
+  local version="1.2.3"
   local version_info="Stitchocker version $version"
   local help="
   Usage:
     $self [--verbose|--debug] [-a <env_alias>] [docker-compose COMMAND] [SETS...]
     $self -h|--help
     $self -v|--version
-    
+
   Options:
     -h|--help            Shows this help text
     -v|--version         Shows $self version
@@ -26,7 +26,7 @@ stitchocker() {
     --verbose            Runs all commands in verbose mode
     -p                   Path to stitching directory
     -a                   Alias to stitching directory
-    
+
   Examples:
     $self up
     $self up default backend frontend
@@ -145,11 +145,10 @@ stitchocker() {
 
     if [[ ! -f $config_path ]]; then
       error --no-exit "No config found for: $path"
-      info "Available config names: ${available_config_names[@]}"
-      exit 1
+      info --exit "Available config names: ${available_config_names[@]}"
     fi
 
-    local default_set=$(env stitchocker_default_set)
+    local default_set=$(env ${self}_default_set)
     if [[ ! -z $default_set && $default_set != "null" ]]; then
       default_set="$default_set"
     else
@@ -170,18 +169,23 @@ stitchocker() {
           done
           exit 1
         fi
-        local set="$first_flag"
+        local set=$(echo "$first_flag" | tr '-' '_')
+        local set_info=$first_flag
       else
         local set="$default_set"
+        local set_info=$set
       fi
 
       local services="$(eval echo \${${sets_field}_${set}[*]})"
+      local search_mode="set"
 
       if [[ -z $services ]]; then
-        error "Your config doesn't have \"$set\" value"
+        search_mode="directory"
+        warn "Your ${self} config doesn't have \"$set_info\" value. Trying to find an existing directory on path."
+        services=$flags
       fi
 
-      info "$(echo "$command" | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}') $set set:"
+      info "$(echo "$command" | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}') $set_info $search_mode:"
 
       for service_alias in ${services}; do
         local service_alias_head="$(echo $service_alias | head -c 1)"
@@ -354,7 +358,7 @@ env_handle() {
 info() {
   local green=$(tput setaf 2)
   local reset=$(tput sgr0)
-  
+
   if [[ $1 != "--exit" ]]; then
     echo -e "${green}$@${reset}"
     echo
@@ -362,6 +366,13 @@ info() {
     echo -e "${green}${@:2}${reset}"
     exit 0
   fi
+}
+
+warn() {
+  local grey=$(tput setaf 8)
+  local reset=$(tput sgr0)
+  echo -e "${grey}$@${reset}"
+  echo
 }
 
 error() {
