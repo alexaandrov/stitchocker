@@ -129,6 +129,7 @@ stitchocker() {
     fi
 
     local available_config_names=("$self.yml" "$self.yaml" "docker-compose.yaml" "docker-compose.yml")
+    local available_dirs=(".dev" ".local")
 
     local custom_config_env=""$self"_config"
     local custom_config_name=$(env $custom_config_env)
@@ -137,15 +138,21 @@ stitchocker() {
     fi
 
     local config_path=""
-    for config_name in ${available_config_names[@]}; do
-      if [[ -f "$path/$config_name" ]]; then
-        config_path="$path/$config_name"
-      fi
+    for subdir in ${available_dirs[@]}; do
+      for config_name in ${available_config_names[@]}; do
+        if [[ -f "$path/$config_name" ]]; then
+          config_path="$path/$config_name"
+          break 2
+        elif [[ -f "$path/$subdir/$config_name" ]]; then
+          config_path="$path/$subdir/$config_name"
+          break 2
+        fi
+      done
     done
 
     if [[ ! -f $config_path ]]; then
       error --no-exit "No config found for: $path"
-      info --exit "Available config names: ${available_config_names[@]}"
+      info --exit "Available config names: ${available_config_names[@]}\nAvailable config directories: ${available_dirs[@]}"
     fi
 
     local default_set=$(env ${self}_default_set)
